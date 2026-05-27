@@ -1,7 +1,33 @@
+body{
+    margin-top: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
 .contenedor{
+    padding: 0px;
+    padding-top:50px ;
+    margin: 0px;
     width: 100%;
-    min-height: 100%;
-        background-color:  #1E1A34;
-/*         --pantone-palette-2: #93A5CF; 2134 C 
+    min-height: 100vh;
+    background-color:   #5528d3;
+    display: flex;
+    flex-direction: column;
+        /*  --pantone-palette-2: #93A5CF; 2134 C 
         --pantone-palette-3: #FED141;  122 C */
+}
+
+header{
+    width: 100%;
+    background-color: #1E1A34 ;
+    text-align: center;
+    justify-content: center;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: auto;
+}
+.bla{
+    /*texto del header*/
+      color: #FED141;
 }
