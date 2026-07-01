@@ -1,357 +1,210 @@
-import React, { useContext, useMemo, useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+// 1. Abrimos la caja de herramientas
+import React from 'react';
+import { View, Text, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-import { ThemeContext } from '../../App';
-
-const DATA = [
-  {
-    id: '1',
-    title: 'Bogotá → Medellín',
-    airline: 'Avianca',
-    time: '06:30 - 08:10',
-    price: '$180 USD',
-    duration: '1h 40m',
-    badge: 'Más vendido',
-  },
-  {
-    id: '2',
-    title: 'Cali → Cartagena',
-    airline: 'LATAM',
-    time: '09:15 - 12:00',
-    price: '$210 USD',
-    duration: '2h 45m',
-    badge: 'Oferta',
-  },
-  {
-    id: '3',
-    title: 'Medellín → Cancún',
-    airline: 'Volaris',
-    time: '13:40 - 18:20',
-    price: '$320 USD',
-    duration: '3h 40m',
-    badge: 'Directo',
-  },
-  {
-    id: '4',
-    title: 'Bogotá → Lima',
-    airline: 'JetSmart',
-    time: '16:05 - 18:55',
-    price: '$150 USD',
-    duration: '2h 50m',
-    badge: 'Economy',
-  },
-  {
-    id: '5',
-    title: 'Cartagena → Barranquilla',
-    airline: 'Wingo',
-    time: '07:50 - 08:45',
-    price: '$95 USD',
-    duration: '55m',
-    badge: 'Rápido',
-  },
-  {
-    id: '6',
-    title: 'Cúcuta → Bogotá',
-    airline: 'Avianca',
-    time: '18:30 - 19:50',
-    price: '$140 USD',
-    duration: '1h 20m',
-    badge: 'Próximo',
-  },
-];
-
+// 2. Pantalla de INICIO (Solo pasajeros y tarjeta simple)
 export default function HomeScreen() {
-  const [query, setQuery] = useState('');
-  const { isDarkMode } = useContext(ThemeContext);
-
-  const filteredData = useMemo(() => {
-    const search = query.trim().toLowerCase();
-
-    if (!search) return DATA;
-
-    return DATA.filter(
-      (item) =>
-        item.title.toLowerCase().includes(search) ||
-        item.airline.toLowerCase().includes(search) ||
-        item.badge.toLowerCase().includes(search)
-    );
-  }, [query]);
-
-  const theme = {
-    background: isDarkMode ? '#0f172a' : '#f4f7fb',
-    surface: isDarkMode ? '#111827' : '#ffffff',
-    surfaceAlt: isDarkMode ? '#0b1220' : '#f8fafc',
-    text: isDarkMode ? '#f8fafc' : '#0f172a',
-    textMuted: isDarkMode ? '#cbd5e1' : '#64748b',
-    border: isDarkMode ? '#1e293b' : '#e2e8f0',
-    chip: isDarkMode ? '#1e293b' : '#e2e8f0',
-    chipActive: isDarkMode ? '#1e3a8a' : '#dbeafe',
-    chipText: isDarkMode ? '#bfdbfe' : '#334155',
-    chipTextActive: isDarkMode ? '#dbeafe' : '#1d4ed8',
-    badgeBg: isDarkMode ? '#172554' : '#eef2ff',
-    badgeText: isDarkMode ? '#bfdbfe' : '#2563eb',
-    inputBg: isDarkMode ? '#0b1220' : '#ffffff',
-    inputBorder: isDarkMode ? '#1e293b' : '#dbe2ff',
-  };
-
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
-        <View>
-          <Text style={[styles.greeting, { color: theme.text }]}>¡Buen viaje!</Text>
-          <Text style={[styles.subtitle, { color: theme.textMuted }]}>Encuentra tu próximo vuelo</Text>
-        </View>
-        <View style={[styles.avatar, { backgroundColor: '#2563eb' }]}>
-          <Text style={styles.avatarText}>M</Text>
-        </View>
-      </View>
+    // El teléfono (SafeAreaView)
+    <SafeAreaView style={styles.fondoGeneral}>
 
-      <View style={styles.searchPanel}>
-        <View style={[styles.searchRow, { backgroundColor: theme.inputBg, borderColor: theme.inputBorder }, { borderWidth: 1 }]}> 
-          <TextInput
-            style={[styles.input, { color: theme.text }]}
-            placeholder="¿A dónde viajas?"
-            placeholderTextColor={theme.textMuted}
-            value={query}
-            onChangeText={setQuery}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+      {/* El scroll para bajar */}
+      <ScrollView>
+
+        {/* ----- TÍTULOS (cabecera) ----- */}
+        <Text style={styles.tituloGrande}>¡Buen viaje!</Text>
+        <Text style={styles.tituloMediano}>Encuentra tu próximo vuelo</Text>
+
+        {/* ----- PASAJEROS (SOLO ESTO QUEDA) ----- */}
+        <Text style={styles.tituloSeccion}>Pasajeros</Text>
+        
+        {/* Fila horizontal con los 3 botones de pasajeros */}
+        <View style={styles.filaHorizontal}>
+          <View style={styles.botonFalso}><Text>1 pasajero</Text></View>
+          <View style={styles.botonFalso}><Text>2 pasajeros</Text></View>
+          <View style={styles.botonFalso}><Text>3+ pasajeros</Text></View>
         </View>
 
-        <View style={styles.quickFilters}>
-          <TouchableOpacity style={[styles.filterChip, { backgroundColor: theme.chip }]}> 
-            <Text style={[styles.filterText, { color: theme.chipText }]}>Ida y vuelta</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.filterChipActive, { backgroundColor: theme.chipActive }]}> 
-            <Text style={[styles.filterTextActive, { color: theme.chipTextActive }]}>Una sola vía</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.filterChip, { backgroundColor: theme.chip }]}> 
-            <Text style={[styles.filterText, { color: theme.chipText }]}>1 pasajero</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        {/* ----- TARJETA DEL VUELO (SUPER SIMPLE) ----- */}
+        <View style={styles.tarjetaSimple}>
 
-      <FlatList
-        data={filteredData}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Text style={[styles.emptyTitle, { color: theme.text }]}>No hay vuelos</Text>
-            <Text style={[styles.emptyText, { color: theme.textMuted }]}>Intenta buscar otra ruta o aerolínea.</Text>
+          {/* Fila 1: Ruta (Córdoba -> Salta) y Aerolínea (FlyBondi) */}
+          <View style={styles.filaRuta}>
+            <Text style={styles.textoRuta}>Córdoba → Salta</Text>
+            <Text style={styles.textoAerolinea}>FlyBondi</Text>
           </View>
-        }
-        renderItem={({ item }) => (
-          <TouchableOpacity style={[styles.card, { backgroundColor: theme.surface, shadowColor: isDarkMode ? '#000' : '#0f172a' }]}>
-            <View style={styles.cardTop}>
-              <View>
-                <Text style={[styles.route, { color: theme.text }]}>{item.title}</Text>
-                <Text style={[styles.airline, { color: theme.textMuted }]}>{item.airline}</Text>
-              </View>
-              <View style={[styles.badge, { backgroundColor: theme.badgeBg }]}>
-                <Text style={[styles.badgeText, { color: theme.badgeText }]}>{item.badge}</Text>
-              </View>
+
+          {/* Fila 2: Horarios (Salida, duración, Llegada) */}
+          <View style={styles.filaHorarios}>
+            {/* Columna 1: Salida */}
+            <View>
+              <Text style={styles.horaGrande}>09:15</Text>
+              <Text style={styles.textoChico}>Salida</Text>
             </View>
 
-            <View style={styles.cardMiddle}>
-              <View>
-                <Text style={[styles.timeLabel, { color: isDarkMode ? '#94a3b8' : '#94a3b8' }]}>Salida</Text>
-                <Text style={[styles.timeValue, { color: theme.text }]}>{item.time.split(' - ')[0]}</Text>
-              </View>
-              <View style={[styles.durationBox, { backgroundColor: theme.surfaceAlt }]}>
-                <Text style={[styles.durationText, { color: theme.textMuted }]}>{item.duration}</Text>
-              </View>
-              <View>
-                <Text style={[styles.timeLabel, { color: isDarkMode ? '#94a3b8' : '#94a3b8' }]}>Llegada</Text>
-                <Text style={[styles.timeValue, { color: theme.text }]}>{item.time.split(' - ')[1]}</Text>
-              </View>
-            </View>
+            {/* Centro: Duración */}
+            <Text style={styles.textoDuracion}>2h 45m</Text>
 
-            <View style={styles.cardBottom}>
-              <View>
-                <Text style={[styles.priceLabel, { color: isDarkMode ? '#94a3b8' : '#94a3b8' }]}>Desde</Text>
-                <Text style={[styles.price, { color: theme.text }]}>{item.price}</Text>
-              </View>
-              <TouchableOpacity style={styles.bookButton}>
-                <Text style={styles.bookButtonText}>Reservar</Text>
-              </TouchableOpacity>
+            {/* Columna 2: Llegada */}
+            <View>
+              <Text style={styles.horaGrande}>12:00</Text>
+              <Text style={styles.textoChico}>Llegada</Text>
             </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+          </View>
+
+          {/* Fila 3: Precio y Botón Agregar */}
+          <View style={styles.filaPrecioBoton}>
+            <Text style={styles.textoPrecio}>Desde <Text style={styles.textoPrecioNegrita}>$210 USD</Text></Text>
+            <View style={styles.botonAzul}>
+              <Text style={styles.textoBotonBlanco}>Agregar</Text>
+            </View>
+          </View>
+
+        </View>
+
+        {/* Espacio al final para no quedar pegado */}
+        <View style={{ height: 50 }} />
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+// ------------------------------------------------
+// 3. ESTILOS (Colores y tamaños)
+// ------------------------------------------------
 const styles = StyleSheet.create({
-  container: {
+
+  // Fondo gris clarito de toda la pantalla
+  fondoGeneral: {
     flex: 1,
+    backgroundColor: '#F5F7FA',
+    paddingHorizontal: 20,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    paddingBottom: 12,
+
+  // Título "¡Buen viaje!"
+  tituloGrande: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#1A1A2E',
+    marginTop: 15,
   },
-  greeting: {
-    fontSize: 22,
-    fontWeight: '800',
-  },
-  subtitle: {
-    marginTop: 4,
-    fontSize: 14,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: '#fff',
-    fontWeight: '800',
-    fontSize: 18,
-  },
-  searchPanel: {
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-  },
-  searchRow: {
-    borderRadius: 18,
-    paddingHorizontal: 12,
-    shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  input: {
-    height: 56,
+
+  // Subtítulo "Encuentra tu próximo vuelo"
+  tituloMediano: {
     fontSize: 16,
+    color: '#666666',
+    marginBottom: 20,
   },
-  quickFilters: {
+
+  // Título de la sección "Pasajeros"
+  tituloSeccion: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1A1A2E',
+    marginBottom: 10,
+    marginTop: 5,
+  },
+
+  // Fila para poner los 3 botones de pasajeros uno al lado del otro
+  filaHorizontal: {
     flexDirection: 'row',
-    marginTop: 10,
-    justifyContent: 'space-between',
+    marginBottom: 20,
   },
-  filterChip: {
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  filterChipActive: {
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  filterText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  filterTextActive: {
-    fontSize: 12,
-    fontWeight: '700',
-  },
-  listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
-  },
-  card: {
-    padding: 16,
-    borderRadius: 18,
-    marginBottom: 12,
-    shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  cardTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  route: {
-    fontSize: 17,
-    fontWeight: '800',
-  },
-  airline: {
-    marginTop: 4,
-    fontSize: 13,
-  },
-  badge: {
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  badgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  cardMiddle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 14,
-  },
-  timeLabel: {
-    fontSize: 12,
-  },
-  timeValue: {
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  durationBox: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-  },
-  durationText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  cardBottom: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  priceLabel: {
-    fontSize: 12,
-  },
-  price: {
-    fontSize: 22,
-    fontWeight: '800',
-  },
-  bookButton: {
-    backgroundColor: '#2563eb',
+
+  // Cada botón de pasajeros (es solo una cajita blanca con borde)
+  botonFalso: {
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 18,
-    paddingVertical: 11,
-    borderRadius: 12,
+    paddingVertical: 10,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    marginRight: 10,
   },
-  bookButtonText: {
-    color: '#fff',
-    fontWeight: '700',
+
+  // ----------------- TARJETA DEL VUELO (simplificada) -----------------
+  tarjetaSimple: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
   },
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 50,
+
+  // Fila de la ruta (izquierda y derecha)
+  filaRuta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Empuja cada texto a un extremo
+    marginBottom: 15,
   },
-  emptyTitle: {
+
+  textoRuta: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: 'bold',
+    color: '#1A1A2E',
   },
-  emptyText: {
-    marginTop: 6,
+
+  textoAerolinea: {
+    fontSize: 14,
+    color: '#2D6AFF',
+    fontWeight: '500',
   },
+
+  // Fila de los horarios (Salida, duración, Llegada)
+  filaHorarios: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Reparte el espacio
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+
+  horaGrande: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#1A1A2E',
+  },
+
+  textoChico: {
+    fontSize: 12,
+    color: '#888888',
+  },
+
+  textoDuracion: {
+    fontSize: 13,
+    color: '#666666',
+    fontWeight: '500',
+  },
+
+  // Fila del precio y el botón
+  filaPrecioBoton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Precio a la izquierda, botón a la derecha
+    alignItems: 'center',
+    borderTopWidth: 1, // Línea separadora arriba
+    borderTopColor: '#EEEEEE',
+    paddingTop: 15,
+  },
+
+  textoPrecio: {
+    fontSize: 15,
+    color: '#333333',
+  },
+
+  textoPrecioNegrita: {
+    fontWeight: 'bold',
+    color: '#1A1A2E',
+  },
+
+  botonAzul: {
+    backgroundColor: '#2D6AFF',
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 30,
+  },
+
+  textoBotonBlanco: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+
 });

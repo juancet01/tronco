@@ -1,151 +1,177 @@
-import React, { useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+// 1. Abrimos la caja de herramientas
+import React from 'react';
+import { View, Text, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-import { ThemeContext } from '../../App';
-
+// 2. Pantalla de PERFIL (Sin la estadística de Vuelos)
 export default function ProfileScreen() {
-  const { isDarkMode } = useContext(ThemeContext);
-
-  const theme = {
-    background: isDarkMode ? '#0f172a' : '#f4f7fb',
-    surface: isDarkMode ? '#111827' : '#ffffff',
-    text: isDarkMode ? '#f8fafc' : '#0f172a',
-    textMuted: isDarkMode ? '#cbd5e1' : '#64748b',
-  };
-
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.header}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>M</Text>
-        </View>
-        <View style={styles.headerInfo}>
-          <Text style={[styles.name, { color: theme.text }]}>Mateo Pérez</Text>
-          <Text style={[styles.email, { color: theme.textMuted }]}>mateo.perez@email.com</Text>
-        </View>
-      </View>
+    <SafeAreaView style={styles.fondoGeneral}>
+      <ScrollView>
 
-      <View style={[styles.card, { backgroundColor: theme.surface, shadowColor: isDarkMode ? '#000' : '#000' }]}>
-        <Text style={[styles.cardTitle, { color: theme.text }]}>Información personal</Text>
-        <View style={styles.row}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Teléfono</Text>
-          <Text style={[styles.value, { color: theme.text }]}>+57 300 123 4567</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>País</Text>
-          <Text style={[styles.value, { color: theme.text }]}>Colombia</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={[styles.label, { color: theme.textMuted }]}>Miembro desde</Text>
-          <Text style={[styles.value, { color: theme.text }]}>Marzo 2024</Text>
-        </View>
-      </View>
+        {/* ----- TARJETA DEL PERFIL (Foto, nombre, correo) ----- */}
+        <View style={styles.tarjetaPerfil}>
+          
+          {/* Círculo gris con la letra "U" (simula la foto) */}
+          <View style={styles.circuloFoto}>
+            <Text style={styles.letraFoto}>U</Text>
+          </View>
 
-      <View style={[styles.card, { backgroundColor: theme.surface, shadowColor: isDarkMode ? '#000' : '#000' }]}>
-        <Text style={[styles.cardTitle, { color: theme.text }]}>Preferencias</Text>
-        <View style={styles.preferenceRow}>
-          <Text style={[styles.preferenceText, { color: theme.text }]}>Notificaciones de vuelos</Text>
-          <Text style={styles.toggle}>ON</Text>
-        </View>
-        <View style={styles.preferenceRow}>
-          <Text style={[styles.preferenceText, { color: theme.text }]}>Modo oscuro</Text>
-          <Text style={styles.toggle}>{isDarkMode ? 'ON' : 'OFF'}</Text>
-        </View>
-      </View>
+          {/* Nombre del usuario */}
+          <Text style={styles.nombreUsuario}>Juan Pérez</Text>
+          
+          {/* Correo electrónico */}
+          <Text style={styles.correoUsuario}>juan.perez@email.com</Text>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Editar perfil</Text>
-      </TouchableOpacity>
-    </View>
+        </View>
+
+        {/* ----- TARJETA DE ESTADÍSTICAS (SOLO Puntos y Destinos) ----- */}
+        <View style={styles.tarjetaEstadisticas}>
+          
+          {/* Estadística 1: Puntos (ya no está Vuelos) */}
+          <View style={styles.itemEstadistica}>
+            <Text style={styles.numeroEstadistica}>1,250</Text>
+            <Text style={styles.textoEstadistica}>Puntos</Text>
+          </View>
+
+          {/* Estadística 2: Destinos */}
+          <View style={styles.itemEstadistica}>
+            <Text style={styles.numeroEstadistica}>8</Text>
+            <Text style={styles.textoEstadistica}>Destinos</Text>
+          </View>
+
+        </View>
+
+        {/* ----- TARJETA DE OPCIONES DEL PERFIL (Teléfono, fecha, nacionalidad) ----- */}
+        <View style={styles.tarjetaOpciones}>
+          
+          {/* Fila 1: Teléfono */}
+          <View style={styles.filaOpcion}>
+            <Text style={styles.textoOpcion}>Teléfono</Text>
+            <Text style={styles.textoValor}>+54 9 351 123-4567</Text>
+          </View>
+
+          {/* Fila 2: Fecha de nacimiento */}
+          <View style={styles.filaOpcion}>
+            <Text style={styles.textoOpcion}>Fecha de nac.</Text>
+            <Text style={styles.textoValor}>15 / 07 / 1990</Text>
+          </View>
+
+          {/* Fila 3: Nacionalidad */}
+          <View style={styles.filaOpcion}>
+            <Text style={styles.textoOpcion}>Nacionalidad</Text>
+            <Text style={styles.textoValor}>Argentina</Text>
+          </View>
+
+        </View>
+
+        {/* Espacio al final */}
+        <View style={{ height: 30 }} />
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+// ------------------------------------------------
+// 3. ESTILOS (Colores y tamaños)
+// ------------------------------------------------
 const styles = StyleSheet.create({
-  container: {
+
+  fondoGeneral: {
     flex: 1,
-    paddingHorizontal: 18,
-    paddingTop: 24,
+    backgroundColor: '#F5F7FA',
+    paddingHorizontal: 20,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 18,
-  },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#2563eb',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: '800',
-  },
-  headerInfo: {
-    marginLeft: 14,
-  },
-  name: {
-    fontSize: 22,
-    fontWeight: '800',
-  },
-  email: {
-    marginTop: 4,
-    fontSize: 14,
-  },
-  card: {
+
+  // --- TARJETA DEL PERFIL (arriba) ---
+  tarjetaPerfil: {
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 14,
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 8,
-    elevation: 2,
+    padding: 25,
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 15,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '800',
+
+  circuloFoto: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: '#E0E7FF',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 12,
   },
-  row: {
+
+  letraFoto: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: '#2D6AFF',
+  },
+
+  nombreUsuario: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#1A1A2E',
+  },
+
+  correoUsuario: {
+    fontSize: 15,
+    color: '#666666',
+    marginTop: 4,
+  },
+
+  // --- TARJETA DE ESTADÍSTICAS (AHORA CON 2 ITEMS: Puntos y Destinos) ---
+  tarjetaEstadisticas: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 18,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
+    justifyContent: 'space-around', // Reparte los 2 items uniformemente
+    marginBottom: 15,
   },
-  label: {
-    fontSize: 14,
-  },
-  value: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  preferenceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+
+  itemEstadistica: {
     alignItems: 'center',
-    paddingVertical: 10,
   },
-  preferenceText: {
+
+  numeroEstadistica: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2D6AFF',
+  },
+
+  textoEstadistica: {
     fontSize: 14,
-    fontWeight: '600',
+    color: '#888888',
+    marginTop: 2,
   },
-  toggle: {
-    color: '#2563eb',
-    fontSize: 13,
-    fontWeight: '800',
+
+  // --- TARJETA DE OPCIONES ---
+  tarjetaOpciones: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 5,
+    marginBottom: 15,
   },
-  button: {
-    backgroundColor: '#2563eb',
-    borderRadius: 14,
+
+  filaOpcion: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingVertical: 14,
-    alignItems: 'center',
-    marginTop: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
   },
-  buttonText: {
-    color: '#fff',
+
+  textoOpcion: {
     fontSize: 16,
-    fontWeight: '700',
+    color: '#1A1A2E',
   },
+
+  textoValor: {
+    fontSize: 16,
+    color: '#888888',
+  },
+
 });

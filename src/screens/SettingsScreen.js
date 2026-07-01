@@ -1,94 +1,116 @@
-import React, { useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Switch } from 'react-native';
+// 1. Abrimos la caja de herramientas
+import React from 'react';
+import { View, Text, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-import { ThemeContext } from '../../App';
-
+// 2. Pantalla de AJUSTES (Solo queda la campanita, sin la parte de seguridad)
 export default function SettingsScreen() {
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
-
-  const theme = {
-    background: isDarkMode ? '#0f172a' : '#f4f7fb',
-    surface: isDarkMode ? '#111827' : '#ffffff',
-    text: isDarkMode ? '#f8fafc' : '#0f172a',
-    textMuted: isDarkMode ? '#cbd5e1' : '#64748b',
-  };
-
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Text style={[styles.title, { color: theme.text }]}>Configuración</Text>
+    <SafeAreaView style={styles.fondoGeneral}>
+      <ScrollView>
 
-      <View style={[styles.card, { backgroundColor: theme.surface }]}>
-        <View style={styles.row}>
-          <View>
-            <Text style={[styles.optionTitle, { color: theme.text }]}>Modo oscuro</Text>
-            <Text style={[styles.optionSubtitle, { color: theme.textMuted }]}>Cambia la apariencia de la app</Text>
+        {/* ----- TÍTULO DE LA SECCIÓN (General) ----- */}
+        <Text style={styles.tituloSeccion}>General</Text>
+
+        {/* ----- TARJETA DE OPCIONES (Notificaciones, Idioma, Modo oscuro) ----- */}
+        <View style={styles.tarjetaBlanca}>
+
+          {/* Opción: Notificaciones (CON la campanita) */}
+          <View style={styles.filaOpcion}>
+            <Text style={styles.textoOpcion}>🔔 Notificaciones</Text>
+            <Text style={styles.textoEstado}>Activadas</Text>
           </View>
-          <Switch
-            value={isDarkMode}
-            onValueChange={toggleTheme}
-            trackColor={{ false: '#cbd5e1', true: '#2563eb' }}
-            thumbColor={isDarkMode ? '#fff' : '#f8fafc'}
-          />
-        </View>
-      </View>
 
-      <View style={[styles.card, { backgroundColor: theme.surface }]}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Cuenta</Text>
-        <TouchableOpacity style={styles.linkButton}>
-          <Text style={[styles.linkText, { color: isDarkMode ? '#93c5fd' : '#2563eb' }]}>Cambiar contraseña</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.linkButton}>
-          <Text style={[styles.linkText, { color: isDarkMode ? '#93c5fd' : '#2563eb' }]}>Cerrar sesión</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          {/* Opción: Idioma (SIN emoji) */}
+          <View style={styles.filaOpcion}>
+            <Text style={styles.textoOpcion}>Idioma</Text>
+            <Text style={styles.textoEstado}>Español</Text>
+          </View>
+
+          {/* Opción: Modo oscuro (SIN emoji) */}
+          <View style={styles.filaOpcion}>
+            <Text style={styles.textoOpcion}>Modo oscuro</Text>
+            <Text style={styles.textoEstado}>Desactivado</Text>
+          </View>
+
+        </View>
+
+        {/* ----- BOTÓN DE CERRAR SESIÓN (SIN emoji) ----- */}
+        <View style={styles.botonCerrarSesion}>
+          <Text style={styles.textoCerrarSesion}>Cerrar sesión</Text>
+        </View>
+
+        {/* Espacio al final */}
+        <View style={{ height: 30 }} />
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+// ------------------------------------------------
+// 3. ESTILOS
+// ------------------------------------------------
 const styles = StyleSheet.create({
-  container: {
+
+  fondoGeneral: {
     flex: 1,
-    paddingHorizontal: 18,
-    paddingTop: 24,
+    backgroundColor: '#F5F7FA',
+    paddingHorizontal: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    marginBottom: 18,
+
+  // Título de sección ("General")
+  tituloSeccion: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1A1A2E',
+    marginTop: 20,
+    marginBottom: 12,
+    marginLeft: 5,
   },
-  card: {
+
+  // Tarjeta blanca donde van las opciones
+  tarjetaBlanca: {
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 8,
-    elevation: 2,
+    paddingHorizontal: 18,
+    paddingVertical: 5,
+    marginBottom: 10,
   },
-  row: {
+
+  // Cada fila de opción
+  filaOpcion: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
   },
-  optionTitle: {
+
+  textoOpcion: {
     fontSize: 16,
-    fontWeight: '700',
+    color: '#1A1A2E',
   },
-  optionSubtitle: {
-    marginTop: 4,
-    fontSize: 13,
-  },
-  sectionTitle: {
+
+  // Texto del estado (ej: "Activadas", "Español")
+  textoEstado: {
     fontSize: 15,
-    fontWeight: '800',
-    marginBottom: 10,
+    color: '#888888',
   },
-  linkButton: {
-    paddingVertical: 8,
+
+  // Botón de Cerrar sesión (cajita roja)
+  botonCerrarSesion: {
+    backgroundColor: '#FF3B30',
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 20,
   },
-  linkText: {
-    fontSize: 14,
-    fontWeight: '600',
+
+  textoCerrarSesion: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: 'bold',
   },
+
 });
