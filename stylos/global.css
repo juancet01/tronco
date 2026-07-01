@@ -1,0 +1,22 @@
+/*
+ * ESTILOS CONSOLIDADOS
+ * 
+ * Todos los estilos de la aplicación están consolidados en:
+ * - stylos/global.styles.js
+ * 
+ * ESTRUCTURA:
+ * - homeStyles: Estilos para HomeScreen
+ * - searchStyles: Estilos para SearchScreen
+ * 
+ * Los componentes importan estos estilos directamente del archivo global.styles.js
+ * 
+ * Colores principales:
+ * - Primario: #2D6AFF (azul)
+ * - Fondo: #F5F5F5 (gris claro)
+ * - Texto principal: #1A1A2E (azul oscuro)
+ * - Texto secundario: #666666 (gris)
+ * 
+ * Uso en componentes:
+ * import { homeStyles } from '../../stylos/global.styles';
+ * <View style={homeStyles.fondoGeneral}>...</View>
+ */
