@@ -91,6 +91,7 @@ export default function SearchScreen() {
             <Text style={styles.emptyText}>Prueba con otra ciudad o aerolínea.</Text>
           </View>
         }
+
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.card}>
             <View style={styles.cardHeader}>
