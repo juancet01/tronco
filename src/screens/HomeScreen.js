@@ -1,10 +1,30 @@
 // 1. Abrimos la caja de herramientas
-import React from 'react';
-import { View, Text, SafeAreaView, ScrollView } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { homeStyles as styles } from '../../stylos/global.styles';
+import { TRAVEL_DATA } from '../data/travelData';
 
 // 2. Pantalla de INICIO (Solo pasajeros y tarjeta simple)
 export default function HomeScreen() {
+  const [savedTrips, setSavedTrips] = useState([]);
+
+  const recommendedTrips = useMemo(() => TRAVEL_DATA.slice(0, 3), []);
+  const displayedTrips = savedTrips.length > 0 ? savedTrips : recommendedTrips;
+
+  const handleAddTrip = (trip) => {
+    setSavedTrips((currentTrips) => {
+      if (currentTrips.some((item) => item.id === trip.id)) {
+        return currentTrips;
+      }
+
+      return [...currentTrips, trip];
+    });
+  };
+
+  const handleRemoveTrip = (tripId) => {
+    setSavedTrips((currentTrips) => currentTrips.filter((item) => item.id !== tripId));
+  };
+
   return (
     // El teléfono (SafeAreaView)
     <SafeAreaView style={styles.fondoGeneral}>
@@ -26,42 +46,54 @@ export default function HomeScreen() {
           <View style={styles.botonFalso}><Text>3+ pasajeros</Text></View>
         </View>
 
-        {/* ----- TARJETA DEL VUELO (SUPER SIMPLE) ----- */}
-        <View style={styles.tarjetaSimple}>
+        <Text style={styles.tituloSeccion}>Tus vuelos</Text>
 
-          {/* Fila 1: Ruta (Córdoba -> Salta) y Aerolínea (FlyBondi) */}
-          <View style={styles.filaRuta}>
-            <Text style={styles.textoRuta}>Córdoba → Salta</Text>
-            <Text style={styles.textoAerolinea}>FlyBondi</Text>
-          </View>
+        {savedTrips.length === 0 ? (
+          <Text style={styles.textoChico}>Aún no agregaste vuelos. Te mostramos recomendaciones.</Text>
+        ) : null}
 
-          {/* Fila 2: Horarios (Salida, duración, Llegada) */}
-          <View style={styles.filaHorarios}>
-            {/* Columna 1: Salida */}
-            <View>
-              <Text style={styles.horaGrande}>09:15</Text>
-              <Text style={styles.textoChico}>Salida</Text>
+        {displayedTrips.map((trip) => (
+          <View key={trip.id} style={styles.tarjetaSimple}>
+            <View style={styles.cardHeader}>
+              <View>
+                <Text style={styles.textoRuta}>{trip.title}</Text>
+                <Text style={styles.textoAerolinea}>{trip.airline}</Text>
+              </View>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{trip.badge}</Text>
+              </View>
             </View>
 
-            {/* Centro: Duración */}
-            <Text style={styles.textoDuracion}>2h 45m</Text>
+            <View style={styles.cardBody}>
+              <View>
+                <Text style={styles.textoChico}>Salida</Text>
+                <Text style={styles.horaGrande}>{trip.time.split(' - ')[0]}</Text>
+              </View>
 
-            {/* Columna 2: Llegada */}
-            <View>
-              <Text style={styles.horaGrande}>12:00</Text>
-              <Text style={styles.textoChico}>Llegada</Text>
+              <View style={styles.durationBox}>
+                <Text style={styles.textoDuracion}>{trip.duration}</Text>
+              </View>
+
+              <View>
+                <Text style={styles.textoChico}>Llegada</Text>
+                <Text style={styles.horaGrande}>{trip.time.split(' - ')[1]}</Text>
+              </View>
+            </View>
+
+            <View style={styles.filaPrecioBoton}>
+              <View>
+                <Text style={styles.textoPrecio}>Desde</Text>
+                <Text style={styles.textoPrecioNegrita}>{trip.price}</Text>
+              </View>
+              <TouchableOpacity
+                style={savedTrips.some((item) => item.id === trip.id) ? styles.botonRojo : styles.botonAzul}
+                onPress={() => (savedTrips.some((item) => item.id === trip.id) ? handleRemoveTrip(trip.id) : handleAddTrip(trip))}
+              >
+                <Text style={styles.textoBotonBlanco}>{savedTrips.some((item) => item.id === trip.id) ? 'Quitar' : 'Agregar'}</Text>
+              </TouchableOpacity>
             </View>
           </View>
-
-          {/* Fila 3: Precio y Botón Agregar */}
-          <View style={styles.filaPrecioBoton}>
-            <Text style={styles.textoPrecio}>Desde <Text style={styles.textoPrecioNegrita}>$210 USD</Text></Text>
-            <View style={styles.botonAzul}>
-              <Text style={styles.textoBotonBlanco}>Agregar</Text>
-            </View>
-          </View>
-
-        </View>
+        ))}
 
         {/* Espacio al final para no quedar pegado */}
         <View style={styles.espaciadorFinal} />

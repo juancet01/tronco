@@ -7,45 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { searchStyles as styles } from '../../stylos/global.styles';
-
-const DATA = [
-  {
-    id: '1',
-    title: 'Bogotá → Medellín',
-    airline: 'Avianca',
-    time: '06:30 - 08:10',
-    price: '$180 USD',
-    duration: '1h 40m',
-    badge: 'Más vendido',
-  },
-  {
-    id: '2',
-    title: 'Cali → Cartagena',
-    airline: 'LATAM',
-    time: '09:15 - 12:00',
-    price: '$210 USD',
-    duration: '2h 45m',
-    badge: 'Oferta',
-  },
-  {
-    id: '3',
-    title: 'Medellín → Cancún',
-    airline: 'Volaris',
-    time: '13:40 - 18:20',
-    price: '$320 USD',
-    duration: '3h 40m',
-    badge: 'Directo',
-  },
-  {
-    id: '4',
-    title: 'Bogotá → Lima',
-    airline: 'JetSmart',
-    time: '16:05 - 18:55',
-    price: '$150 USD',
-    duration: '2h 50m',
-    badge: 'Economy',
-  },
-];
+import { TRAVEL_DATA } from '../data/travelData';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
@@ -53,9 +15,9 @@ export default function SearchScreen() {
   const filteredData = useMemo(() => {
     const search = query.trim().toLowerCase();
 
-    if (!search) return DATA;
+    if (!search) return TRAVEL_DATA;
 
-    return DATA.filter(
+    return TRAVEL_DATA.filter(
       (item) =>
         item.title.toLowerCase().includes(search) ||
         item.airline.toLowerCase().includes(search) ||

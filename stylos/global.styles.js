@@ -49,50 +49,76 @@ export const homeStyles = StyleSheet.create({
 
   tarjetaSimple: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    elevation: 3,
   },
 
-  filaRuta: {
+  cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    alignItems: 'flex-start',
   },
 
   textoRuta: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1A1A2E',
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#0f172a',
   },
 
   textoAerolinea: {
-    fontSize: 14,
-    color: '#2D6AFF',
-    fontWeight: '500',
+    marginTop: 4,
+    fontSize: 13,
+    color: '#64748b',
   },
 
-  filaHorarios: {
+  badge: {
+    backgroundColor: '#eef2ff',
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+
+  badgeText: {
+    color: '#2563eb',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+
+  cardBody: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 18,
+    justifyContent: 'space-between',
+    marginTop: 14,
   },
 
   horaGrande: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1A1A2E',
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0f172a',
   },
 
   textoChico: {
     fontSize: 12,
-    color: '#888888',
+    color: '#94a3b8',
   },
 
   textoDuracion: {
-    fontSize: 13,
-    color: '#666666',
-    fontWeight: '500',
+    fontSize: 12,
+    color: '#475569',
+    fontWeight: '600',
+  },
+
+  durationBox: {
+    backgroundColor: '#f8fafc',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
   },
 
   filaPrecioBoton: {
@@ -105,17 +131,25 @@ export const homeStyles = StyleSheet.create({
   },
 
   textoPrecio: {
-    fontSize: 15,
-    color: '#333333',
+    fontSize: 12,
+    color: '#94a3b8',
   },
 
   textoPrecioNegrita: {
-    fontWeight: 'bold',
-    color: '#1A1A2E',
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#0f172a',
   },
 
   botonAzul: {
     backgroundColor: '#2D6AFF',
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 30,
+  },
+
+  botonRojo: {
+    backgroundColor: '#DC2626',
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 30,
