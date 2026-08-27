@@ -8,15 +8,15 @@ import {
 } from 'react-native';
 import { searchStyles as styles } from '../../stylos/global.styles';
 import { TRAVEL_DATA } from '../data/travelData';
+import { useTrips } from '../context/TripContext';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
+  const { addTrip, removeTrip, isTripSaved } = useTrips();
 
   const filteredData = useMemo(() => {
     const search = query.trim().toLowerCase();
-
     if (!search) return TRAVEL_DATA;
-
     return TRAVEL_DATA.filter(
       (item) =>
         item.title.toLowerCase().includes(search) ||
@@ -53,44 +53,51 @@ export default function SearchScreen() {
             <Text style={styles.emptyText}>Prueba con otra ciudad o aerolínea.</Text>
           </View>
         }
-
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.cardHeader}>
-              <View>
-                <Text style={styles.route}>{item.title}</Text>
-                <Text style={styles.airline}>{item.airline}</Text>
+        renderItem={({ item }) => {
+          const saved = isTripSaved(item.id);
+          return (
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View>
+                  <Text style={styles.route}>{item.title}</Text>
+                  <Text style={styles.airline}>{item.airline}</Text>
+                </View>
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{item.badge}</Text>
+                </View>
               </View>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{item.badge}</Text>
+
+              <View style={styles.cardBody}>
+                <View>
+                  <Text style={styles.label}>Salida</Text>
+                  <Text style={styles.value}>{item.time.split(' - ')[0]}</Text>
+                </View>
+                <View style={styles.durationBox}>
+                  <Text style={styles.duration}>{item.duration}</Text>
+                </View>
+                <View>
+                  <Text style={styles.label}>Llegada</Text>
+                  <Text style={styles.value}>{item.time.split(' - ')[1]}</Text>
+                </View>
+              </View>
+
+              <View style={styles.cardFooter}>
+                <View>
+                  <Text style={styles.priceLabel}>Desde</Text>
+                  <Text style={styles.price}>{item.price}</Text>
+                </View>
+                <TouchableOpacity
+                  style={saved ? styles.buttonRemove : styles.button}
+                  onPress={() => (saved ? removeTrip(item.id) : addTrip(item))}
+                >
+                  <Text style={styles.buttonText}>
+                    {saved ? 'Quitar' : 'Agregar'}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-
-            <View style={styles.cardBody}>
-              <View>
-                <Text style={styles.label}>Salida</Text>
-                <Text style={styles.value}>{item.time.split(' - ')[0]}</Text>
-              </View>
-              <View style={styles.durationBox}>
-                <Text style={styles.duration}>{item.duration}</Text>
-              </View>
-              <View>
-                <Text style={styles.label}>Llegada</Text>
-                <Text style={styles.value}>{item.time.split(' - ')[1]}</Text>
-              </View>
-            </View>
-
-            <View style={styles.cardFooter}>
-              <View>
-                <Text style={styles.priceLabel}>Desde</Text>
-                <Text style={styles.price}>{item.price}</Text>
-              </View>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Ver vuelo</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        )}
+          );
+        }}
       />
     </View>
   );
