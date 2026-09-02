@@ -16,16 +16,6 @@ const Tab = createBottomTabNavigator();
 
 
 export default function App() {
-
- <TripProvider>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Search" component={SearchScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </TripProvider>
-    
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const theme = useMemo(

@@ -1,5 +1,5 @@
 // 1. Abrimos la caja de herramientas
-import React, { useMemo, useState, useEffect } from 'react'; // <-- NUEVO: añadimos useEffect
+import React, { useMemo, useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { homeStyles as styles } from '../../stylos/global.styles';
 import { TRAVEL_DATA } from '../data/travelData';
@@ -7,16 +7,10 @@ import { useTrips } from '../context/TripContext'; // <-- NUEVO (para sincroniza
 
 // 2. Pantalla de INICIO (Solo pasajeros y tarjeta simple)
 export default function HomeScreen() {
-  const [savedTrips, setSavedTrips] = useState([]);
   const [pasajerosSeleccionados, setPasajerosSeleccionados] = useState('1 pasajero');
 
-  // <-- NUEVO: obtenemos funciones y estado global del contexto
-  const { savedTrips: globalTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
-
-  // <-- NUEVO: sincronizar estado local con el global
-  useEffect(() => {
-    setSavedTrips(globalTrips);
-  }, [globalTrips]);
+  // Obtenemos el estado y funciones directamente del contexto (una sola fuente de verdad)
+  const { savedTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
 
   const recommendedTrips = useMemo(() => TRAVEL_DATA.slice(0, 3), []);
   const displayedTrips = savedTrips.length > 0 ? savedTrips : recommendedTrips;
@@ -29,29 +23,23 @@ export default function HomeScreen() {
     return 1; // por defecto
   };
 
-  // <-- NUEVO: función para formatear precio multiplicado
+  // Función para formatear precio multiplicado preservando la moneda
   const formatearPrecio = (precioOriginal, multiplicador) => {
-    // Extraer el número del precio (ej. "$200" -> 200)
+    // Extraer el número del precio (ej. "$210 USD" -> 210)
     const numero = parseFloat(precioOriginal.replace(/[^0-9.]/g, ''));
     if (isNaN(numero)) return precioOriginal; // si no es número, devolver igual
     const total = numero * multiplicador;
-    // Devolver con el mismo formato (ej. "$400")
-    return `$${total}`;
+    // Preservar el sufijo de moneda (ej: "USD")
+    const sufijo = precioOriginal.replace(/[$0-9., ]/g, '').trim();
+    return sufijo ? `$${total} ${sufijo}` : `$${total}`;
   };
 
   const handleAddTrip = (trip) => {
-    setSavedTrips((currentTrips) => {
-      if (currentTrips.some((item) => item.id === trip.id)) {
-        return currentTrips;
-      }
-      return [...currentTrips, trip];
-    });
-    addTripGlobal(trip); // <-- NUEVO
+    addTripGlobal(trip);
   };
 
   const handleRemoveTrip = (tripId) => {
-    setSavedTrips((currentTrips) => currentTrips.filter((item) => item.id !== tripId));
-    removeTripGlobal(tripId); // <-- NUEVO
+    removeTripGlobal(tripId);
   };
 
   return (
