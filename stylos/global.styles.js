@@ -37,6 +37,31 @@ export const homeStyles = StyleSheet.create({
     marginBottom: 20,
   },
 
+  botonPasajero: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#D6DCE8',
+    marginRight: 8,
+  },
+
+  botonPasajeroSeleccionado: {
+    backgroundColor: '#2563EB',
+    borderColor: '#2563EB',
+  },
+
+  textoBotonPasajero: {
+    color: '#334155',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
+  textoBotonPasajeroSeleccionado: {
+    color: '#FFFFFF',
+  },
+
   botonFalso: {
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 18,
@@ -463,4 +488,28 @@ export const settingsStyles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
   },
+  botonPasajero: {
+  backgroundColor: '#FFFFFF',
+  paddingHorizontal: 18,
+  paddingVertical: 10,
+  borderRadius: 30,
+  borderWidth: 1,
+  borderColor: '#DDDDDD',
+  marginRight: 10,
+},
+botonPasajeroSeleccionado: {
+  backgroundColor: '#2D6AFF',
+  borderColor: '#2D6AFF',
+},
+textoBotonPasajero: {
+  color: '#333333',
+  fontSize: 14,
+},
+textoBotonPasajeroSeleccionado: {
+  color: '#FFFFFF',
+  fontWeight: 'bold',
+},
 });
+
+
+

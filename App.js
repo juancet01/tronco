@@ -8,12 +8,24 @@ import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import { TripProvider } from './src/context/TripContext';
 
 export const ThemeContext = createContext();
 
 const Tab = createBottomTabNavigator();
 
+
 export default function App() {
+
+ <TripProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Search" component={SearchScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </TripProvider>
+    
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const theme = useMemo(
@@ -26,18 +38,19 @@ export default function App() {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={{
-            tabBarStyle: {
-              backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
-              borderTopColor: isDarkMode ? '#1e293b' : '#e2e8f0',
-            },
-            tabBarActiveTintColor: '#2563eb',
-            tabBarInactiveTintColor: isDarkMode ? '#94a3b8' : '#64748b',
-          }}
-        >
+      <TripProvider>
+        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={{
+              tabBarStyle: {
+                backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
+                borderTopColor: isDarkMode ? '#1e293b' : '#e2e8f0',
+              },
+              tabBarActiveTintColor: '#2563eb',
+              tabBarInactiveTintColor: isDarkMode ? '#94a3b8' : '#64748b',
+            }}
+          >
           <Tab.Screen
             name="Inicio"
             component={HomeScreen}
@@ -90,8 +103,9 @@ export default function App() {
               ),
             }}
           />
-        </Tab.Navigator>
-      </NavigationContainer>
+          </Tab.Navigator>
+        </NavigationContainer>
+      </TripProvider>
     </ThemeContext.Provider>
   );
 }
