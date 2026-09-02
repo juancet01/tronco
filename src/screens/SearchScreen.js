@@ -14,14 +14,20 @@ export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const { addTrip, removeTrip, isTripSaved } = useTrips();
 
+  const normalize = (text) =>
+    text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
   const filteredData = useMemo(() => {
-    const search = query.trim().toLowerCase();
+    const search = normalize(query.trim());
     if (!search) return TRAVEL_DATA;
     return TRAVEL_DATA.filter(
       (item) =>
-        item.title.toLowerCase().includes(search) ||
-        item.airline.toLowerCase().includes(search) ||
-        item.badge.toLowerCase().includes(search)
+        normalize(item.title).includes(search) ||
+        normalize(item.airline).includes(search) ||
+        normalize(item.badge).includes(search)
     );
   }, [query]);
 
