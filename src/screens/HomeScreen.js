@@ -20,6 +20,7 @@ export default function HomeScreen() {
     if (pasajerosSeleccionados === '1 pasajero') return 1;
     if (pasajerosSeleccionados === '2 pasajeros') return 2;
     if (pasajerosSeleccionados === '3+ pasajeros') return 3;
+    
     return 1; // por defecto
   };
 
