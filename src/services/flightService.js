@@ -1,10 +1,7 @@
-// src/services/flightService.js
 import { api } from './api';
 
-export async function searchFlights({ origin, destination, date }) {
-  const { flights } = await api.get(
-    `/api/flights/search?origin=${origin}&destination=${destination}&date=${date}`
-  );
+export async function getAllFlights() {
+  const { flights } = await api.get('/api/flights');
   return flights;
 }
 

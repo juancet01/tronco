@@ -1,13 +1,23 @@
-// src/services/api.js
-const BASE_URL = 'http://TU_IP_LOCAL:3000'; // ⬅️ reemplaza con tu IP (ej: http://192.168.0.15:3000)
+const BASE_URL = 'http://10.0.8.102:3000';
 
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seg
+
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      signal: controller.signal,
+      ...options,
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    return res.json();
+  } catch (e) {
+    clearTimeout(timeoutId);
+    if (e.name === 'AbortError') throw new Error('Timeout: no se pudo conectar al backend');
+    throw e;
+  }
 }
 
 export const api = {

@@ -1,36 +1,55 @@
 // 1. Abrimos la caja de herramientas
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { homeStyles as styles } from '../../stylos/global.styles';
 import { TRAVEL_DATA } from '../data/travelData';
-import { useTrips } from '../context/TripContext'; // <-- NUEVO (para sincronización)
+import { useTrips } from '../context/TripContext';
+import { getWeatherByIATA } from '../services/weatherService'; // 👈 NUEVO
 
-// 2. Pantalla de INICIO (Solo pasajeros y tarjeta simple)
+// Helper para sacar la ciudad destino del título ("Córdoba → Salta")
+const getDestino = (title) => {
+  if (!title) return null;
+  const parts = title.split('→');
+  return parts[1]?.trim() || null;
+};
+
+// 2. Pantalla de INICIO
 export default function HomeScreen() {
   const [pasajerosSeleccionados, setPasajerosSeleccionados] = useState('1 pasajero');
+  const [weatherMap, setWeatherMap] = useState({}); // 👈 NUEVO
 
-  // Obtenemos el estado y funciones directamente del contexto (una sola fuente de verdad)
   const { savedTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
 
   const recommendedTrips = useMemo(() => TRAVEL_DATA.slice(0, 3), []);
   const displayedTrips = savedTrips.length > 0 ? savedTrips : recommendedTrips;
 
-  // <-- NUEVO: función que devuelve el multiplicador según pasajeros
+  // 👇 NUEVO: cargar clima para cada destino único de los viajes mostrados
+  useEffect(() => {
+    const destinos = new Set();
+    displayedTrips.forEach((trip) => {
+      const dest = getDestino(trip.title);
+      if (dest) destinos.add(dest);
+    });
+
+    destinos.forEach(async (dest) => {
+      const w = await getWeatherByIATA(dest);
+      if (w) {
+        setWeatherMap((prev) => (prev[dest] ? prev : { ...prev, [dest]: w }));
+      }
+    });
+  }, [displayedTrips]);
+
   const getMultiplicador = () => {
     if (pasajerosSeleccionados === '1 pasajero') return 1;
     if (pasajerosSeleccionados === '2 pasajeros') return 2;
     if (pasajerosSeleccionados === '3+ pasajeros') return 3;
-    
-    return 1; // por defecto
+    return 1;
   };
 
-  // Función para formatear precio multiplicado preservando la moneda
   const formatearPrecio = (precioOriginal, multiplicador) => {
-    // Extraer el número del precio (ej. "$210 USD" -> 210)
     const numero = parseFloat(precioOriginal.replace(/[^0-9.]/g, ''));
-    if (isNaN(numero)) return precioOriginal; // si no es número, devolver igual
+    if (isNaN(numero)) return precioOriginal;
     const total = numero * multiplicador;
-    // Preservar el sufijo de moneda (ej: "USD")
     const sufijo = precioOriginal.replace(/[$0-9., ]/g, '').trim();
     return sufijo ? `$${total} ${sufijo}` : `$${total}`;
   };
@@ -50,7 +69,7 @@ export default function HomeScreen() {
         <Text style={styles.tituloGrande}>¡Buen viaje!</Text>
         <Text style={styles.tituloMediano}>Encuentra tu próximo vuelo</Text>
 
-        {/* ----- PASAJEROS (TUS BOTONES FUNCIONALES, INTACTOS) ----- */}
+        {/* ----- PASAJEROS ----- */}
         <Text style={styles.tituloSeccion}>Pasajeros</Text>
         <View style={styles.filaHorizontal}>
           <TouchableOpacity
@@ -121,9 +140,12 @@ export default function HomeScreen() {
         ) : null}
 
         {displayedTrips.map((trip) => {
-          // <-- NUEVO: calcular multiplicador y precio multiplicado para cada tarjeta
           const multiplicador = getMultiplicador();
           const precioMultiplicado = formatearPrecio(trip.price, multiplicador);
+
+          // 👇 NUEVO: sacar el clima del destino de este viaje
+          const dest = getDestino(trip.title);
+          const weather = dest ? weatherMap[dest] : null;
 
           return (
             <View key={trip.id} style={styles.tarjetaSimple}>
@@ -153,11 +175,30 @@ export default function HomeScreen() {
                 </View>
               </View>
 
+              {/* 👇 NUEVO: bloque de clima */}
+              {weather && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 10,
+                    paddingHorizontal: 4,
+                  }}
+                >
+                  <Text style={{ fontSize: 18, marginRight: 6 }}>
+                    {weather.weather.emoji}
+                  </Text>
+                  <Text style={{ fontSize: 13, color: '#555' }}>
+                    {weather.city}: {weather.temperature}°C · {weather.weather.text}
+                  </Text>
+                </View>
+              )}
+
               <View style={styles.filaPrecioBoton}>
                 <View>
                   <Text style={styles.textoPrecio}>Desde</Text>
                   <Text style={styles.textoPrecioNegrita}>
-                    {precioMultiplicado} {/* <-- NUEVO: usamos el precio multiplicado */}
+                    {precioMultiplicado}
                   </Text>
                 </View>
                 <TouchableOpacity
