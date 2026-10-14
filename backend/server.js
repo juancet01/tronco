@@ -12,50 +12,6 @@ app.get('/', (req, res) => {
 });
 
 // Endpoint de búsqueda de vuelos (MOCK por ahora)
-app.get('/api/flights/search', (req, res) => {
-  const { origin, destination, date } = req.query;
-
-  const flights = [
-    {
-      id: 'TRV-001',
-      airline: 'Aerolíneas Argentinas',
-      origin: origin || 'COR',
-      destination: destination || 'SLA',
-      departure_at: `${date || '2026-10-15'}T08:30:00`,
-      arrival_at: `${date || '2026-10-15'}T10:15:00`,
-      duration: '1h 45m',
-      price: 120.50,
-      currency: 'USD',
-      badge: 'Nacional',
-    },
-    {
-      id: 'TRV-002',
-      airline: 'FlyBondi',
-      origin: origin || 'COR',
-      destination: destination || 'SLA',
-      departure_at: `${date || '2026-10-15'}T14:00:00`,
-      arrival_at: `${date || '2026-10-15'}T15:50:00`,
-      duration: '1h 50m',
-      price: 95.00,
-      currency: 'USD',
-      badge: 'Nacional',
-    },
-    {
-      id: 'TRV-003',
-      airline: 'JetSmart',
-      origin: origin || 'COR',
-      destination: destination || 'SLA',
-      departure_at: `${date || '2026-10-15'}T19:20:00`,
-      arrival_at: `${date || '2026-10-15'}T21:10:00`,
-      duration: '1h 50m',
-      price: 88.75,
-      currency: 'USD',
-      badge: 'Nacional',
-    },
-  ];
-
-  res.json({ flights });
-});
 
 // Endpoint de pago simulado (MOCK)
 app.post('/api/bookings', (req, res) => {
