@@ -4,7 +4,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-na
 import { homeStyles as styles } from '../../stylos/global.styles';
 import { TRAVEL_DATA } from '../data/travelData';
 import { useTrips } from '../context/TripContext';
-import { getWeatherByIATA } from '../services/weatherService'; // 👈 NUEVO
+import { getWeatherByIATA } from '../services/weatherService'; 
 
 // Helper para sacar la ciudad destino del título ("Córdoba → Salta")
 const getDestino = (title) => {
@@ -16,7 +16,7 @@ const getDestino = (title) => {
 // 2. Pantalla de INICIO
 export default function HomeScreen() {
   const [pasajerosSeleccionados, setPasajerosSeleccionados] = useState('1 pasajero');
-  const [weatherMap, setWeatherMap] = useState({}); // 👈 NUEVO
+  const [weatherMap, setWeatherMap] = useState({}); 
 
   const { savedTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
 
