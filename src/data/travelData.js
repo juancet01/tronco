@@ -1,65 +1,32 @@
-export const TRAVEL_DATA = [
-  {
-    id: '1',
-    title: 'Córdoba → Salta',
-    airline: 'FlyBondi',
-    time: '09:15 - 12:00',
-    price: '$210 USD',
-    duration: '2h 45m',
-    badge: 'Nacional',
-  },
-  {
-    id: '2',
-    title: 'Mendoza → Córdoba',
-    airline: 'Aerolíneas Argentinas',
-    time: '08:40 - 10:30',
-    price: '$180 USD',
-    duration: '1h 50m',
-    badge: 'Nacional',
-  },
-  {
-    id: '3',
-    title: 'Tucumán → Salta',
-    airline: 'JetSmart',
-    time: '11:20 - 13:05',
-    price: '$165 USD',
-    duration: '1h 45m',
-    badge: 'Nacional',
-  },
-  {
-    id: '4',
-    title: 'Bariloche → Neuquén',
-    airline: 'Andes',
-    time: '14:10 - 15:35',
-    price: '$195 USD',
-    duration: '1h 25m',
-    badge: 'Nacional',
-  },
-  {
-    id: '5',
-    title: 'Rosario → Mendoza',
-    airline: 'LATAM Argentina',
-    time: '16:30 - 19:10',
-    price: '$220 USD',
-    duration: '2h 40m',
-    badge: 'Nacional',
-  },
-  {
-    id: '6',
-    title: 'Buenos Aires → Montevideo',
-    airline: 'Avianca',
-    time: '07:50 - 09:20',
-    price: '$140 USD',
-    duration: '1h 30m',
-    badge: 'Internacional',
-  },
-  {
-    id: '7',
-    title: 'Córdoba → Lima',
-    airline: 'LATAM',
-    time: '18:15 - 22:05',
-    price: '$310 USD',
-    duration: '3h 50m',
-    badge: 'Internacional',
-  },
-];
+import { obtenerVuelos } from '../database/conexion';
+
+function formatTime(value) {
+  const match = String(value).match(/(?:T| )(\d{2}:\d{2})/);
+  return match ? match[1] : '--:--';
+}
+
+export async function cargarVuelos() {
+  const vuelos = await obtenerVuelos();
+
+  return vuelos.map((vuelo) => {
+    const durationMinutes = Number(vuelo.durationMinutes);
+
+    return {
+      id: String(vuelo.id),
+      title: `${vuelo.originCity} → ${vuelo.destinationCity}`,
+      airline: `Vuelo ${vuelo.flightNumber}${
+        vuelo.aircraftModel ? ` · ${vuelo.aircraftModel}` : ''
+      }`,
+      countryRoute: `${vuelo.originCountry} → ${vuelo.destinationCountry}`,
+      time: `${formatTime(vuelo.departureAt)} - ${formatTime(vuelo.arrivalAt)}`,
+      price:
+        vuelo.price === null || vuelo.price === undefined
+          ? 'Precio no disponible'
+          : `$${vuelo.price}`,
+      duration: `${Math.floor(durationMinutes / 60)}h ${durationMinutes % 60}m`,
+      badge: vuelo.originCountry === vuelo.destinationCountry ? 'Nacional' : 'Internacional',
+      originCountry: vuelo.originCountry,
+      destinationCountry: vuelo.destinationCountry,
+    };
+  });
+}

@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { homeStyles as styles } from '../../stylos/global.styles';
-import { TRAVEL_DATA } from '../data/travelData';
+import { cargarVuelos } from '../data/travelData';
 import { useTrips } from '../context/TripContext';
 import { getWeatherByIATA } from '../services/weatherService'; 
 
@@ -17,10 +17,32 @@ const getDestino = (title) => {
 export default function HomeScreen() {
   const [pasajerosSeleccionados, setPasajerosSeleccionados] = useState('1 pasajero');
   const [weatherMap, setWeatherMap] = useState({}); 
+  const [vuelos, setVuelos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [errorCarga, setErrorCarga] = useState('');
 
   const { savedTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
 
-  const recommendedTrips = useMemo(() => TRAVEL_DATA.slice(0, 3), []);
+  useEffect(() => {
+    let activo = true;
+
+    cargarVuelos()
+      .then((resultados) => {
+        if (activo) setVuelos(resultados);
+      })
+      .catch((error) => {
+        if (activo) setErrorCarga(error.message);
+      })
+      .finally(() => {
+        if (activo) setCargando(false);
+      });
+
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  const recommendedTrips = useMemo(() => vuelos.slice(0, 3), [vuelos]);
   const displayedTrips = savedTrips.length > 0 ? savedTrips : recommendedTrips;
 
   // 👇 NUEVO: cargar clima para cada destino único de los viajes mostrados
@@ -135,8 +157,16 @@ export default function HomeScreen() {
 
         <Text style={styles.tituloSeccion}>Tus vuelos</Text>
 
+        {cargando ? (
+          <Text style={styles.textoChico}>Cargando vuelos desde la base de datos…</Text>
+        ) : null}
+        {!cargando && errorCarga ? (
+          <Text style={styles.textoChico}>No se pudieron cargar los vuelos: {errorCarga}</Text>
+        ) : null}
         {savedTrips.length === 0 ? (
-          <Text style={styles.textoChico}>Aún no agregaste vuelos. Te mostramos recomendaciones.</Text>
+          !cargando && !errorCarga && recommendedTrips.length > 0 ? (
+            <Text style={styles.textoChico}>Aún no agregaste vuelos. Te mostramos recomendaciones.</Text>
+          ) : null
         ) : null}
 
         {displayedTrips.map((trip) => {
@@ -153,6 +183,7 @@ export default function HomeScreen() {
                 <View>
                   <Text style={styles.textoRuta}>{trip.title}</Text>
                   <Text style={styles.textoAerolinea}>{trip.airline}</Text>
+                  <Text style={styles.textoAerolinea}>{trip.countryRoute}</Text>
                 </View>
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{trip.badge}</Text>

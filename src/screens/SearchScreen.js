@@ -7,28 +7,51 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { searchStyles as styles } from '../../stylos/global.styles';
-import { TRAVEL_DATA } from '../data/travelData';
+import { cargarVuelos } from '../data/travelData';
 import { useTrips } from '../context/TripContext';
 import { getWeatherByIATA } from '../services/weatherService';
 
 export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const [weatherMap, setWeatherMap] = useState({});
+  const [vuelos, setVuelos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [errorCarga, setErrorCarga] = useState('');
   const { addTrip, removeTrip, isTripSaved } = useTrips();
+
+  useEffect(() => {
+    let activo = true;
+
+    cargarVuelos()
+      .then((resultados) => {
+        if (activo) setVuelos(resultados);
+      })
+      .catch((error) => {
+        if (activo) setErrorCarga(error.message);
+      })
+      .finally(() => {
+        if (activo) setCargando(false);
+      });
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   const normalize = (text) =>
     text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
   const filteredData = useMemo(() => {
     const search = normalize(query.trim());
-    if (!search) return TRAVEL_DATA
-    return TRAVEL_DATA.filter(
+    if (!search) return vuelos;
+    return vuelos.filter(
       (item) =>
         normalize(item.title).includes(search) ||
         normalize(item.airline).includes(search) ||
-        normalize(item.badge).includes(search)
+        normalize(item.badge).includes(search) ||
+        normalize(`${item.originCountry} ${item.destinationCountry}`).includes(search)
     );
-  }, [query]);
+  }, [query, vuelos]);
 
   // Cargar el clima de cada destino único
   useEffect(() => {
@@ -50,13 +73,15 @@ iatas.forEach(async (iata) => {
     <View style={styles.container}>
       <View style={styles.topSection}>
         <Text style={styles.title}>Buscar vuelos</Text>
-        <Text style={styles.subtitle}>{filteredData.length} resultados</Text>
+        <Text style={styles.subtitle}>
+          {cargando ? 'Cargando vuelos…' : `${filteredData.length} resultados`}
+        </Text>
       </View>
 
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Busca una ruta, aerolínea o promoción"
+          placeholder="Busca una ruta, número de vuelo o país"
           value={query}
           onChangeText={setQuery}
           autoCapitalize="none"
@@ -68,11 +93,26 @@ iatas.forEach(async (iata) => {
         data={filteredData}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        ListHeaderComponent={
+          errorCarga ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyTitle}>No se pudieron cargar los vuelos</Text>
+              <Text style={styles.emptyText}>{errorCarga}</Text>
+            </View>
+          ) : null
+        }
         ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>No hay resultados</Text>
-            <Text style={styles.emptyText}>Prueba con otra ciudad o aerolínea.</Text>
-          </View>
+          cargando ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>Conectando con la base de datos…</Text>
+            </View>
+          ) : errorCarga ? null : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyTitle}>No hay resultados</Text>
+              <Text style={styles.emptyText}>Prueba con otra ruta o país.</Text>
+            </View>
+            
+          )
         }
         renderItem={({ item }) => {
           const saved = isTripSaved(item.id);
@@ -85,6 +125,7 @@ iatas.forEach(async (iata) => {
                 <View>
                   <Text style={styles.route}>{item.title}</Text>
                   <Text style={styles.airline}>{item.airline}</Text>
+                  <Text style={styles.airline}>{item.countryRoute}</Text>
                 </View>
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{item.badge}</Text>
