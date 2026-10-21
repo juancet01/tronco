@@ -5,7 +5,7 @@ export async function conectar(){
             host:'localhost',
             database:'ruiz_bd',
             user:'root',
-            password:''
+            password:'Kapejo250830'
         })
         console.log('conectado')
         return bdd;

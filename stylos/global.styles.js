@@ -510,6 +510,3 @@ textoBotonPasajeroSeleccionado: {
   fontWeight: 'bold',
 },
 });
-
-
-

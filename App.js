@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { Image } from 'react-native';
 
+import AuthScreen from './src/screens/AuthScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
@@ -32,6 +33,7 @@ export default function App() {
         <StatusBar style={isDarkMode ? 'light' : 'dark'} />
         <NavigationContainer>
           <Tab.Navigator
+            initialRouteName="Acceso"
             screenOptions={{
               tabBarStyle: {
                 backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
@@ -41,6 +43,19 @@ export default function App() {
               tabBarInactiveTintColor: isDarkMode ? '#94a3b8' : '#64748b',
             }}
           >
+          <Tab.Screen
+            name="Acceso"
+            component={AuthScreen}
+            options={{
+              tabBarLabel: 'Acceso',
+              tabBarIcon: ({ size }) => (
+                <Image
+                  source={require('./img/ChatGPT Image 2 jul 2026, 01_35_46.png')}
+                  style={{ width: size, height: size }}
+                />
+              ),
+            }}
+          />
           <Tab.Screen
             name="Inicio"
             component={HomeScreen}
