@@ -4,7 +4,30 @@ import { cartStyles as styles } from '../../stylos/global.styles';
 import { useTrips } from '../context/TripContext';
 
 function getUnitPrice(price) {
-  const amount = Number.parseFloat(String(price).replace(/[^0-9.]/g, ''));
+  const match = String(price).match(/-?\d[\d.,]*/);
+
+  if (!match) {
+    return null;
+  }
+
+  const separators = match[0].match(/[.,]/g) || [];
+  const lastSeparator = Math.max(match[0].lastIndexOf('.'), match[0].lastIndexOf(','));
+  const decimalPlaces = lastSeparator < 0 ? 0 : match[0].length - lastSeparator - 1;
+  const hasGroupingSeparator = separators.length > 1 || decimalPlaces === 3;
+  let normalized = match[0];
+
+  if (hasGroupingSeparator && decimalPlaces === 3) {
+    normalized = normalized.replace(/[.,]/g, '');
+  } else if (hasGroupingSeparator) {
+    normalized = normalized
+      .slice(0, lastSeparator)
+      .replace(/[.,]/g, '')
+      .concat('.', normalized.slice(lastSeparator + 1));
+  } else {
+    normalized = normalized.replace(',', '.');
+  }
+
+  const amount = Number(normalized);
   return Number.isFinite(amount) ? amount : null;
 }
 
@@ -13,7 +36,7 @@ function formatPrice(amount, currency) {
 }
 
 export default function CartScreen() {
-  const { savedTrips, removeTrip, clearTrips } = useTrips();
+  const { savedTrips, removeTrip, clearTrips, addPoints } = useTrips();
   const [purchaseMessage, setPurchaseMessage] = useState('');
   const tripsWithPrices = savedTrips.map((trip) => {
     const unitPrice = getUnitPrice(trip.price);
@@ -31,15 +54,17 @@ export default function CartScreen() {
     (sum, trip) => sum + (trip.subtotal ?? 0),
     0
   );
+  const pointsEarned = Math.round(total * 0.1);
   const currency =
     savedTrips[0]?.price?.replace(/[$0-9., ]/g, '').trim() || 'USD';
 
   const handlePurchase = () => {
     const confirmationCode = `TRV-${Date.now().toString(36).toUpperCase()}`;
     const purchasedCount = savedTrips.length;
+    addPoints(pointsEarned);
     clearTrips();
     setPurchaseMessage(
-      `Compra de prueba confirmada para ${purchasedCount} vuelo(s). Código: ${confirmationCode}. No se realizó ningún cobro real.`
+      `Compra de prueba confirmada para ${purchasedCount} vuelo(s). Sumaste ${pointsEarned.toLocaleString('es-AR')} puntos. Código: ${confirmationCode}. No se realizó ningún cobro real.`
     );
   };
 
@@ -105,6 +130,9 @@ export default function CartScreen() {
             </View>
             <Text style={styles.detail}>
               Compra de prueba: no se realizará ningún cobro real.
+            </Text>
+            <Text style={styles.detail}>
+              Vas a sumar {pointsEarned.toLocaleString('es-AR')} puntos con esta compra.
             </Text>
             <TouchableOpacity
               accessibilityRole="button"

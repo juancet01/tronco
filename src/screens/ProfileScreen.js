@@ -2,9 +2,12 @@
 import React from 'react';
 import { View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { profileStyles as styles } from '../../stylos/global.styles';
+import { useTrips } from '../context/TripContext';
 
 // 2. Pantalla de PERFIL (Sin la estadística de Vuelos)
 export default function ProfileScreen() {
+  const { points } = useTrips();
+
   return (
     <SafeAreaView style={styles.fondoGeneral}>
       <ScrollView>
@@ -30,7 +33,7 @@ export default function ProfileScreen() {
           
           {/* Estadística 1: Puntos (ya no está Vuelos) */}
           <View style={styles.itemEstadistica}>
-            <Text style={styles.numeroEstadistica}>1,250</Text>
+            <Text style={styles.numeroEstadistica}>{points.toLocaleString('es-AR')}</Text>
             <Text style={styles.textoEstadistica}>Puntos</Text>
           </View>
 
