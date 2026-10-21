@@ -1,6 +1,10 @@
-const BASE_URL = 'http://10.0.8.102:3000';
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL?.replace(/\/+$/, '');
 
 async function request(path, options = {}) {
+  if (!BASE_URL) {
+    throw new Error('Configura EXPO_PUBLIC_API_URL en el archivo .env de la app.');
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seg
 

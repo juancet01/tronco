@@ -54,16 +54,21 @@ app.use((error, req, res, next) => {
 
 // Endpoint de pago simulado (MOCK)
 app.post('/api/bookings', (req, res) => {
-  const { flightId, cardNumber } = req.body;
+  const { flightId, passengerCount = 1, cardNumber } = req.body;
 
   if (cardNumber !== '4242424242424242') {
     return res.status(400).json({ success: false, message: 'Tarjeta rechazada' });
+  }
+
+  if (!Number.isInteger(passengerCount) || passengerCount < 1) {
+    return res.status(400).json({ success: false, message: 'Cantidad de pasajeros inválida' });
   }
 
   res.json({
     success: true,
     confirmationCode: `TRV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
     flightId,
+    passengerCount,
   });
 });
 

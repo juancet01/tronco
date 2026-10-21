@@ -5,6 +5,6 @@ export async function getAllFlights() {
   return flights;
 }
 
-export async function createBooking({ flightId, cardNumber, cardName }) {
-  return api.post('/api/bookings', { flightId, cardNumber, cardName });
+export async function createBooking({ flightId, passengerCount = 1, cardNumber, cardName }) {
+  return api.post('/api/bookings', { flightId, passengerCount, cardNumber, cardName });
 }

@@ -10,6 +10,12 @@ export async function cargarVuelos() {
 
   return vuelos.map((vuelo) => {
     const durationMinutes = Number(vuelo.durationMinutes);
+    const priceAmount =
+      vuelo.price === null || vuelo.price === undefined || vuelo.price === ''
+        ? null
+        : Number(vuelo.price);
+    const validPrice =
+      priceAmount !== null && Number.isFinite(priceAmount) && priceAmount >= 0;
 
     return {
       id: String(vuelo.id),
@@ -19,10 +25,8 @@ export async function cargarVuelos() {
       }`,
       countryRoute: `${vuelo.originCountry} → ${vuelo.destinationCountry}`,
       time: `${formatTime(vuelo.departureAt)} - ${formatTime(vuelo.arrivalAt)}`,
-      price:
-        vuelo.price === null || vuelo.price === undefined
-          ? 'Precio no disponible'
-          : `$${vuelo.price}`,
+      price: validPrice ? `$${priceAmount}` : 'Precio no disponible',
+      priceAmount: validPrice ? priceAmount : null,
       duration: `${Math.floor(durationMinutes / 60)}h ${durationMinutes % 60}m`,
       badge: vuelo.originCountry === vuelo.destinationCountry ? 'Nacional' : 'Internacional',
       originCountry: vuelo.originCountry,

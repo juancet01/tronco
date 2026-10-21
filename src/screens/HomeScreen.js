@@ -21,7 +21,7 @@ export default function HomeScreen() {
   const [cargando, setCargando] = useState(true);
   const [errorCarga, setErrorCarga] = useState('');
 
-  const { savedTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
+  const { addToCart, removeFromCart, isInCart } = useTrips();
 
   useEffect(() => {
     let activo = true;
@@ -43,7 +43,7 @@ export default function HomeScreen() {
   }, []);
 
   const recommendedTrips = useMemo(() => vuelos.slice(0, 3), [vuelos]);
-  const displayedTrips = savedTrips.length > 0 ? savedTrips : recommendedTrips;
+  const displayedTrips = recommendedTrips;
 
   // 👇 NUEVO: cargar clima para cada destino único de los viajes mostrados
   useEffect(() => {
@@ -69,19 +69,10 @@ export default function HomeScreen() {
   };
 
   const formatearPrecio = (precioOriginal, multiplicador) => {
-    const numero = parseFloat(precioOriginal.replace(/[^0-9.]/g, ''));
-    if (isNaN(numero)) return precioOriginal;
-    const total = numero * multiplicador;
-    const sufijo = precioOriginal.replace(/[$0-9., ]/g, '').trim();
-    return sufijo ? `$${total} ${sufijo}` : `$${total}`;
-  };
-
-  const handleAddTrip = (trip) => {
-    addTripGlobal(trip);
-  };
-
-  const handleRemoveTrip = (tripId) => {
-    removeTripGlobal(tripId);
+    if (precioOriginal === null || precioOriginal === undefined) {
+      return 'Precio no disponible';
+    }
+    return `$${Math.round(precioOriginal * multiplicador).toLocaleString('es-AR')}`;
   };
 
   return (
@@ -155,7 +146,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.tituloSeccion}>Tus vuelos</Text>
+        <Text style={styles.tituloSeccion}>Vuelos recomendados</Text>
 
         {cargando ? (
           <Text style={styles.textoChico}>Cargando vuelos desde la base de datos…</Text>
@@ -163,15 +154,10 @@ export default function HomeScreen() {
         {!cargando && errorCarga ? (
           <Text style={styles.textoChico}>No se pudieron cargar los vuelos: {errorCarga}</Text>
         ) : null}
-        {savedTrips.length === 0 ? (
-          !cargando && !errorCarga && recommendedTrips.length > 0 ? (
-            <Text style={styles.textoChico}>Aún no agregaste vuelos. Te mostramos recomendaciones.</Text>
-          ) : null
-        ) : null}
-
         {displayedTrips.map((trip) => {
           const multiplicador = getMultiplicador();
-          const precioMultiplicado = formatearPrecio(trip.price, multiplicador);
+          const precioMultiplicado = formatearPrecio(trip.priceAmount, multiplicador);
+          const agregado = isInCart(trip.id);
 
           // 👇 NUEVO: sacar el clima del destino de este viaje
           const dest = getDestino(trip.title);
@@ -233,11 +219,15 @@ export default function HomeScreen() {
                   </Text>
                 </View>
                 <TouchableOpacity
-                  style={savedTrips.some((item) => item.id === trip.id) ? styles.botonRojo : styles.botonAzul}
-                  onPress={() => (savedTrips.some((item) => item.id === trip.id) ? handleRemoveTrip(trip.id) : handleAddTrip(trip))}
+                  style={agregado ? styles.botonRojo : styles.botonAzul}
+                  onPress={() =>
+                    agregado
+                      ? removeFromCart(trip.id)
+                      : addToCart(trip, getMultiplicador())
+                  }
                 >
                   <Text style={styles.textoBotonBlanco}>
-                    {savedTrips.some((item) => item.id === trip.id) ? 'Quitar' : 'Agregar'}
+                    {agregado ? 'Quitar' : 'Agregar'}
                   </Text>
                 </TouchableOpacity>
               </View>

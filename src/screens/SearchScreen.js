@@ -17,7 +17,7 @@ export default function SearchScreen() {
   const [vuelos, setVuelos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [errorCarga, setErrorCarga] = useState('');
-  const { addTrip, removeTrip, isTripSaved } = useTrips();
+  const { addToCart, removeFromCart, isInCart } = useTrips();
 
   useEffect(() => {
     let activo = true;
@@ -115,7 +115,7 @@ iatas.forEach(async (iata) => {
           )
         }
         renderItem={({ item }) => {
-          const saved = isTripSaved(item.id);
+          const agregado = isInCart(item.id);
           const destIata = item.title.split('→')[1]?.trim();
           const weather = weatherMap[destIata];
 
@@ -164,11 +164,13 @@ iatas.forEach(async (iata) => {
                   <Text style={styles.price}>{item.price}</Text>
                 </View>
                 <TouchableOpacity
-                  style={saved ? styles.buttonRemove : styles.button}
-                  onPress={() => (saved ? removeTrip(item.id) : addTrip(item))}
+                  style={agregado ? styles.buttonRemove : styles.button}
+                  onPress={() =>
+                    agregado ? removeFromCart(item.id) : addToCart(item)
+                  }
                 >
                   <Text style={styles.buttonText}>
-                    {saved ? 'Quitar' : 'Agregar'}
+                    {agregado ? 'Quitar' : 'Agregar'}
                   </Text>
                 </TouchableOpacity>
               </View>

@@ -3,24 +3,24 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 const TripContext = createContext(null);
 
 export function TripProvider({ children }) {
-  const [savedTrips, setSavedTrips] = useState([]);
+  const [cartTrips, setCartTrips] = useState([]);
 
   const value = useMemo(
     () => ({
-      savedTrips,
-      addTrip: (trip) => {
-        setSavedTrips((currentTrips) =>
+      cartTrips,
+      addToCart: (trip, passengerCount = 1) => {
+        setCartTrips((currentTrips) =>
           currentTrips.some((item) => item.id === trip.id)
             ? currentTrips
-            : [...currentTrips, trip]
+            : [...currentTrips, { ...trip, passengerCount }]
         );
       },
-      removeTrip: (tripId) => {
-        setSavedTrips((currentTrips) => currentTrips.filter((item) => item.id !== tripId));
+      removeFromCart: (tripId) => {
+        setCartTrips((currentTrips) => currentTrips.filter((item) => item.id !== tripId));
       },
-      isTripSaved: (tripId) => savedTrips.some((item) => item.id === tripId),
+      isInCart: (tripId) => cartTrips.some((item) => item.id === tripId),
     }),
-    [savedTrips]
+    [cartTrips]
   );
 
   return <TripContext.Provider value={value}>{children}</TripContext.Provider>;
