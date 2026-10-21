@@ -36,7 +36,7 @@ export default function HomeScreen() {
   };
 
   const handleAddTrip = (trip) => {
-    addTripGlobal(trip);
+    addTripGlobal({ ...trip, passengerCount: getMultiplicador() });
   };
 
   const handleRemoveTrip = (tripId) => {

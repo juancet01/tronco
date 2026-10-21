@@ -18,6 +18,7 @@ export function TripProvider({ children }) {
       removeTrip: (tripId) => {
         setSavedTrips((currentTrips) => currentTrips.filter((item) => item.id !== tripId));
       },
+      clearTrips: () => setSavedTrips([]),
       isTripSaved: (tripId) => savedTrips.some((item) => item.id === tripId),
     }),
     [savedTrips]

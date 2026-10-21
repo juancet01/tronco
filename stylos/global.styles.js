@@ -334,6 +334,122 @@ export const searchStyles = StyleSheet.create({
   },
 });
 
+export const cartStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f4f7fb',
+  },
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 28,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  subtitle: {
+    marginTop: 4,
+    marginBottom: 16,
+    fontSize: 14,
+    color: '#64748b',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 12,
+  },
+  route: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  detail: {
+    marginTop: 5,
+    fontSize: 13,
+    color: '#64748b',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 14,
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  removeButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 10,
+    backgroundColor: '#fee2e2',
+  },
+  removeText: {
+    color: '#b91c1c',
+    fontWeight: '700',
+  },
+  summary: {
+    marginTop: 4,
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  totalLabel: {
+    fontSize: 15,
+    color: '#64748b',
+  },
+  total: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  buyButton: {
+    alignItems: 'center',
+    marginTop: 14,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: '#2563eb',
+  },
+  disabledButton: {
+    backgroundColor: '#94a3b8',
+  },
+  buyButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  notice: {
+    marginBottom: 14,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: '#dbeafe',
+    color: '#1e40af',
+  },
+  empty: {
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#0f172a',
+  },
+  emptyText: {
+    marginTop: 8,
+    textAlign: 'center',
+    color: '#64748b',
+  },
+});
+
 // PROFILE SCREEN STYLES
 export const profileStyles = StyleSheet.create({
   fondoGeneral: {

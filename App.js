@@ -2,13 +2,14 @@ import React, { createContext, useMemo, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { Image } from 'react-native';
+import { Image, Text } from 'react-native';
 
 import AuthScreen from './src/screens/AuthScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import CartScreen from './src/screens/CartScreen';
 import { TripProvider } from './src/context/TripContext';
 
 export const ThemeContext = createContext();
@@ -33,7 +34,7 @@ export default function App() {
         <StatusBar style={isDarkMode ? 'light' : 'dark'} />
         <NavigationContainer>
           <Tab.Navigator
-            initialRouteName="Acceso"
+            initialRouteName="Inicio"
             screenOptions={{
               tabBarStyle: {
                 backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
@@ -92,6 +93,16 @@ export default function App() {
                   source={require('./img/ChatGPT Image 2 jul 2026, 01_35_46.png')}
                   style={{ width: 24, height: 24 }}
                 />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Carrito"
+            component={CartScreen}
+            options={{
+              tabBarLabel: 'Carrito',
+              tabBarIcon: ({ color }) => (
+                <Text style={{ color, fontSize: 18 }}>🛒</Text>
               ),
             }}
           />
