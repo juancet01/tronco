@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 
 const TripContext = createContext(null);
 
 export function TripProvider({ children }) {
   const [savedTrips, setSavedTrips] = useState([]);
   const [points, setPoints] = useState(0);
+  const pointsRef = useRef(0);
 
   const value = useMemo(
     () => ({
@@ -15,7 +16,21 @@ export function TripProvider({ children }) {
           throw new Error('La cantidad de puntos debe ser un número válido.');
         }
 
-        setPoints((currentPoints) => currentPoints + amount);
+        pointsRef.current += amount;
+        setPoints(pointsRef.current);
+      },
+      redeemPoints: (amount) => {
+        if (!Number.isInteger(amount) || amount <= 0) {
+          throw new Error('El costo del canje debe ser un número entero positivo.');
+        }
+
+        if (pointsRef.current < amount) {
+          return false;
+        }
+
+        pointsRef.current -= amount;
+        setPoints(pointsRef.current);
+        return true;
       },
       addTrip: (trip) => {
         setSavedTrips((currentTrips) =>

@@ -450,6 +450,106 @@ export const cartStyles = StyleSheet.create({
   },
 });
 
+export const rewardsStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f4f7fb',
+  },
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 28,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  subtitle: {
+    marginTop: 4,
+    marginBottom: 16,
+    fontSize: 14,
+    color: '#64748b',
+  },
+  balance: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 16,
+    borderRadius: 16,
+    backgroundColor: '#eef2ff',
+  },
+  balanceLabel: {
+    fontSize: 14,
+    color: '#4338ca',
+  },
+  balanceValue: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#3730a3',
+  },
+  rewardCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+  },
+  rewardEmoji: {
+    width: 56,
+    fontSize: 38,
+    textAlign: 'center',
+  },
+  rewardInfo: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  rewardName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0f172a',
+  },
+  rewardDescription: {
+    marginTop: 4,
+    fontSize: 13,
+    color: '#64748b',
+  },
+  rewardCost: {
+    marginTop: 7,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#4f46e5',
+  },
+  redeemButton: {
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 10,
+    backgroundColor: '#2563eb',
+  },
+  disabledButton: {
+    backgroundColor: '#cbd5e1',
+  },
+  redeemButtonText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  disabledButtonText: {
+    color: '#475569',
+  },
+  empty: {
+    alignItems: 'center',
+    paddingVertical: 36,
+  },
+  emptyText: {
+    color: '#64748b',
+    textAlign: 'center',
+  },
+});
+
 // PROFILE SCREEN STYLES
 export const profileStyles = StyleSheet.create({
   fondoGeneral: {

@@ -10,6 +10,7 @@ import SearchScreen from './src/screens/SearchScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import CartScreen from './src/screens/CartScreen';
+import RewardsScreen from './src/screens/RewardsScreen';
 import { TripProvider } from './src/context/TripContext';
 
 export const ThemeContext = createContext();
@@ -103,6 +104,16 @@ export default function App() {
               tabBarLabel: 'Carrito',
               tabBarIcon: ({ color }) => (
                 <Text style={{ color, fontSize: 18 }}>🛒</Text>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Canjes"
+            component={RewardsScreen}
+            options={{
+              tabBarLabel: 'Canjes',
+              tabBarIcon: ({ color }) => (
+                <Text style={{ color, fontSize: 18 }}>🎁</Text>
               ),
             }}
           />

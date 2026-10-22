@@ -1,5 +1,5 @@
 // 1. Abrimos la caja de herramientas
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { homeStyles as styles } from '../../stylos/global.styles';
 import { TRAVEL_DATA } from '../data/travelData';
@@ -12,8 +12,7 @@ export default function HomeScreen() {
   // Obtenemos el estado y funciones directamente del contexto (una sola fuente de verdad)
   const { savedTrips, addTrip: addTripGlobal, removeTrip: removeTripGlobal } = useTrips();
 
-  const recommendedTrips = useMemo(() => TRAVEL_DATA.slice(0, 3), []);
-  const displayedTrips = savedTrips.length > 0 ? savedTrips : recommendedTrips;
+  const displayedTrips = TRAVEL_DATA;
 
   // <-- NUEVO: función que devuelve el multiplicador según pasajeros
   const getMultiplicador = () => {
@@ -114,10 +113,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.tituloSeccion}>Tus vuelos</Text>
+        <Text style={styles.tituloSeccion}>Vuelos disponibles</Text>
 
         {savedTrips.length === 0 ? (
-          <Text style={styles.textoChico}>Aún no agregaste vuelos. Te mostramos recomendaciones.</Text>
+          <Text style={styles.textoChico}>
+            Elegí uno o varios vuelos y agregalos al carrito.
+          </Text>
         ) : null}
 
         {displayedTrips.map((trip) => {
